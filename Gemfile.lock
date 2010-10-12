@@ -1,0 +1,24 @@
+GEM
+  remote: http://gems.github.com/
+  remote: http://gems.rubyforge.org/
+  specs:
+    ParseTree (3.0.6)
+      RubyInline (>= 3.7.0)
+      sexp_processor (>= 3.0.0)
+    RubyInline (3.8.6)
+      ZenTest (~> 4.3)
+    ZenTest (4.4.0)
+    ruby2ruby (1.2.5)
+      ruby_parser (~> 2.0)
+      sexp_processor (~> 3.0)
+    ruby_parser (2.0.5)
+      sexp_processor (~> 3.0)
+    sexp_processor (3.0.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ParseTree
+  ruby2ruby
+  sexp_processor
