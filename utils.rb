@@ -1,5 +1,5 @@
 def code(&block)
-  Sexp.from_array(block.to_sexp)
+  Sexp.from_array(block.to_sexp)[3]
 end
 
 class Sexp
