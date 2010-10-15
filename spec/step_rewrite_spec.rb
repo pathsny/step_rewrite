@@ -3,7 +3,7 @@ require File.expand_path('../convert_matcher', __FILE__)
 
 describe StepRewrite do
   describe "#process" do
-    context 'converts code when it sees the special callback symbol &cb' do
+    context 'when it sees the special callback symbol &cb' do
       subject { lambda { |sexp| StepRewrite.new(:cb).process(sexp) } }
 
       it do
@@ -21,10 +21,7 @@ describe StepRewrite do
       subject { lambda { |sexp| StepRewrite.new(:_).process(sexp) } }
 
       it do
-        should convert {
-          a = foo(1)
-          bar(a)
-        }.to {
+        should_not convert {
           a = foo(1)
           bar(a)
         }
