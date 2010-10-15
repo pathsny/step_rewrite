@@ -28,16 +28,16 @@ class StepRewrite < SexpProcessor
         cur_exp[2][3].pop
         inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
         [s(*[:iter, cur_exp[2], s(:lasgn, param)] + [inner_exp].compact)]
-      when :mass_asgn then
+      when :masgn then
         param = cur_exp[1][1..-1].to_a
         cur_exp[2][1][3].pop
         inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
         [s(*[:iter, cur_exp[2][1], s(:masgn, s(:array, *param))] + [inner_exp].compact)]
-      when :attr_asgn then
-        param = cur_exp[1][1..2]
-        puts param
+      when :attrasgn then
+        next_exp = cur_exp.last.pop.tap{|x| x.last.pop}
+        param = cur_exp
         inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
-        [s(*[:iter, cur_exp[2][1], s(:masgn, s(:array, *param))] + [inner_exp].compact)]
+        [s(*[:iter, next_exp, param] + [inner_exp].compact)]
       else
         acc_exp.unshift(process_inner_expr(cur_exp))
     end
@@ -53,8 +53,8 @@ class StepRewrite < SexpProcessor
   def identify(exp)
     return :special_call if special_call?(exp)
     return :special_asgn if exp.first == :lasgn && special_call?(exp[2])
-    return :mass_asgn if exp.first == :masgn && special_call?(exp[2][1])
-    return :attr_asgn if exp.first == :attrasgn && special_call?(exp[3][1])
+    return :masgn if exp.first == :masgn && special_call?(exp[2][1])
+    return :attrasgn if exp.first == :attrasgn && special_call?(exp[3][1])
   end
 end
 

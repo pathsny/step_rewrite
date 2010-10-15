@@ -31,9 +31,9 @@ module Spec
 given code was converted to
 #{new_code_in_ruby}
 aka
-got
+expected
 #{@expected_code}
-instead of
+got
 #{@new_code}
 END
       rescue

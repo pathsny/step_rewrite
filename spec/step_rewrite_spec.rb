@@ -180,6 +180,15 @@ describe StepRewrite do
           foo { |a.b| bar(a) }
         }
       end
+
+      it do
+        should convert {
+          a.b.c = foo(&_)
+          bar(a.b)
+        }.to {
+          foo { |a.b.c| bar(a.b) }
+        }
+      end
     end
   end
 end
