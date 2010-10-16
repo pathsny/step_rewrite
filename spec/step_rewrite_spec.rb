@@ -1,10 +1,10 @@
-require File.expand_path('../../requires', __FILE__)
+require File.expand_path('../../lib/step_rewrite', __FILE__)
 require File.expand_path('../convert_matcher', __FILE__)
 
-describe StepRewrite do
+describe StepRewrite::Rewriter do
   describe "#process" do
     context 'when it sees the special callback symbol &cb' do
-      subject { lambda { |sexp| StepRewrite.new(:cb).process(sexp) } }
+      subject { lambda { |sexp| StepRewrite::Rewriter.new(:cb).process(sexp) } }
 
       it do
         should convert {
@@ -18,7 +18,7 @@ describe StepRewrite do
 
     context "when the special callback symbol is _ " do
 
-      subject { lambda { |sexp| StepRewrite.new(:_).process(sexp) } }
+      subject { lambda { |sexp| StepRewrite::Rewriter.new(:_).process(sexp) } }
 
       it do
         should_not convert {

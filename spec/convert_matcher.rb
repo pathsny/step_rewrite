@@ -1,4 +1,4 @@
-module Spec
+module RSpec
   module Matchers
     class Convert
       def initialize(given_code)
@@ -68,9 +68,7 @@ got
 #{@new_code}
 END
       end
-
-
-    end
+  end
 
     def convert(&given_code)
       Matchers::Convert.new(given_code)
