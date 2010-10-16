@@ -146,7 +146,7 @@ describe StepRewrite::Rewriter do
         should convert {
           a, b, c = foo(&_)
           bar(a, b)
-          }.to {
+        }.to {
           foo { |a, b, c| bar(a, b) }
         }
       end
@@ -184,6 +184,19 @@ describe StepRewrite::Rewriter do
           bar(a.b)
         }.to {
           foo { |a.b.c| bar(a.b) }
+        }
+      end
+
+      it do
+        should convert {
+          foo(bar.map { |v| v*2 }, &_)
+          bar { baz }
+          qux(&grault)
+        }.to {
+          foo(bar.map { |v| v*2 }) do
+            bar { baz }
+            qux(&grault)
+          end
         }
       end
     end

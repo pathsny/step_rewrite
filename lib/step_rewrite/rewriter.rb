@@ -56,6 +56,4 @@ module StepRewrite
       return :attrasgn if exp.first == :attrasgn && special_call?(exp[3][1])
     end
   end
-
-
 end

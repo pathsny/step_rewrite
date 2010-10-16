@@ -8,3 +8,4 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require "step_rewrite/sexp_utilities"
 require "step_rewrite/rewriter"
+require 'step_rewrite/step_rewrite'
