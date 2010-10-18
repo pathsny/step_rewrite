@@ -1,22 +1,22 @@
 = What is this for?
 
 This gem tries to solve a very specific problem when working with evented I/O code
-Ideally I suppose it would work with something like EventMachine, but I havent
-worked enough with event machine to know if that's the case. Its meant for cases
+Ideally, I suppose it would work with something like EventMachine[http://rubyeventmachine.com/], but I havent
+worked enough with EventMachine to know if that's the case. Its meant for cases
 where blocks are passed to methods, not as is usual, as a lightweight strategy
 pattern, but to sequence a set of steps. Like in this example.
 
-writeFile(path, "hello") do
-  File.open(path, "a") do |file|
-    write(file, "\nworld") do
-      close(file) do
-        read(path) do |data|
-          puts data.last
+    writeFile(path, "hello") do
+        File.open(path, "a") do |file|
+            write(file, "\nworld") do
+                close(file) do
+                    read(path) do |data|
+                        puts data.last
+                    end
+                end
+            end
         end
-      end
     end
-  end
-end
 
 While each function takes a block, this is merely to keep the rest of the program.
 To understand the context a little better read this[http://blog.vishnuiyengar.com/2010/10/changing-rules.html]
