@@ -1,5 +1,5 @@
-require File.expand_path('../../lib/step_rewrite', __FILE__)
-require File.expand_path('../convert_matcher', __FILE__)
+require File.expand_path('../../spec_helper.rb', __FILE__)
+require 'rspec'
 
 describe StepRewrite::Rewriter do
   describe "#process" do

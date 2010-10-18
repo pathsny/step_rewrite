@@ -1,4 +1,6 @@
-require File.expand_path('../../lib/step_rewrite/module', __FILE__)
+require File.expand_path('../../spec_helper.rb', __FILE__)
+require 'step_rewrite/module'
+require 'rspec'
 
 describe Module do
   class Foo
@@ -13,7 +15,7 @@ describe Module do
 
   it 'defines methods where the special callback symbol is rewritten' do
     class Foo
-      define_method_with_step :into_itself_plus_five do |a|
+      define_step_method :into_itself_plus_five do |a|
         res = call_adder(a, &_)
         res_2 = plus_five(res, &_)
         res_2*res
@@ -25,10 +27,10 @@ describe Module do
 
   it 'defines methods allowing configuration of the special callback symbol' do
     class Foo
-      define_method_with_step :into_itself_plus_five, :cb do |a|
+      define_step_method :into_itself_plus_five, :cb do |a|
         res = call_adder(a, &cb)
         _ = lambda { |res_2| res_2 * res }
-        plus_five(res, &_).class
+        plus_five(res, &_)
       end
     end
 
