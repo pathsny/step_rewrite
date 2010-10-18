@@ -1,6 +1,6 @@
 = What is this for?
 
-This gem tries to solve a very specific problem when working with evented I/O code
+This gem tries to solve a very specific problem when working with evented I/O code.
 Ideally, I suppose it would work with something like EventMachine[http://rubyeventmachine.com/], but I havent
 worked enough with EventMachine to know if that's the case. Its meant for cases
 where blocks are passed to methods, not as is usual, as a lightweight strategy
@@ -18,7 +18,8 @@ pattern, but to sequence a set of steps. Like in this example.
         end
     end
 
-While each function takes a block, this is merely to keep the rest of the program.
+While each function takes a block, this is merely to sequence the rest of the program
+to execute after the function is executed.
 To understand the context a little better read this[http://blog.vishnuiyengar.com/2010/10/changing-rules.html]
 
 
@@ -28,58 +29,59 @@ To understand the context a little better read this[http://blog.vishnuiyengar.co
 After installing the gem, the quick and dirty way to use it is to include the
 StepRewrite module in your code.
 
-include StepRewrite
-step do
-  path = "fileio.txt"
-  writeFile(path, "hello", &_)
-  file = File.open(path, "a", &_)
-  write(file, "\nworld", &_)
-  close(file, &_)
-  data = read(path, &_)
-  puts data.last
-end
+    include StepRewrite
+    step do
+        path = "fileio.txt"
+        writeFile(path, "hello", &_)
+        file = File.open(path, "a", &_)
+        write(file, "\nworld", &_)
+        close(file, &_)
+        data = read(path, &_)
+        puts data.last
+    end
 
 The block passed to step is rewritten so that everywhere you have a method
 that takes $_ as a parameter, the rest of the code is passed as a block to it.
-So step rewrites this code into the code above and evaluates it.
+So step rewrites this code into the code above and THEN evaluates it.
 
 = Rewrite Rules
- Any code of the form
+Any code of the form
 
  foo(&_)
  bar
  baz
 
- gets rewritten to
+gets rewritten to
 
  foo do
    bar
    baz
  end
 
- return values from such functions are converted into arguments to the block
+return values from such functions are converted into arguments to the block
 
  a = foo(&_)
  bar(a)
  baz
 
- becomes
+becomes
 
  foo do |a|
    bar(a)
    baz
  end
 
- This allows an infinite degree of nesting
+This allows an infinite degree of nesting
 
  foo(&_)
  bar(&_)
  baz(&_)
  qux
 
- becomes foo { bar { baz { qux } } }
+becomes
+ foo { bar { baz { qux } } }
 
- existing blocks or lambda parameters are not touched.
+existing blocks or lambda parameters are not touched.
 
 = Other execution methods
 
