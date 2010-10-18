@@ -1,15 +1,15 @@
-require 'forwardable'
-
 module StepRewrite
-  include Forwardable
-
   def step(*args, &block)
     StepRewrite.step(*args, &block)
   end
 
+  def self.get_sexp(&block)
+    Sexp.from_array(block.to_sexp)
+  end
+
   def self.rewrite(callback_symbol = :_, &block)
-    old_sexp = Sexp.from_array(block.to_sexp)
-    new_sexp = StepRewrite::Rewriter.new(callback_symbol).process(old_sexp)
+    rewriter = StepRewrite::Rewriter.new(callback_symbol)
+    new_sexp = rewriter.process(get_sexp(&block))
     Ruby2Ruby.new.process(new_sexp)
   end
 

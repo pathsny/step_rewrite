@@ -199,6 +199,29 @@ describe StepRewrite::Rewriter do
           end
         }
       end
+
+      it do
+        should convert {
+          foo(&_)
+          begin
+            a = bar(&_)
+            baz do
+              b = qux(&_)
+              quux(a, b)
+            end
+          end
+        }.to {
+          foo do
+            begin
+              bar do |a|
+                baz do
+                  qux { |b| quux(a, b) }
+                end
+              end
+            end
+          end
+        }
+      end
     end
   end
 end

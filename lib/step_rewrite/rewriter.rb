@@ -1,7 +1,5 @@
 module StepRewrite
   class Rewriter < SexpProcessor
-    include SexpUtilities
-
     def initialize(cb)
       super()
       self.strict = false
@@ -11,34 +9,37 @@ module StepRewrite
 
     def process_block(exp)
       exp.shift
-      result = exp.reverse.inject([], &method(:accumulate))
+      result = exp.reverse.inject([]) {|acc, cur| accumulate(acc, process(cur))}
       exp.clear
-      result.size > 1 ? s(:block, *result) : result.first
+      group_expr(result)
     end
 
-    def accumulate(acc_exp, cur_exp)
-      case identify(cur_exp)
-        when :special_call then
-          cur_exp[3].pop
-          inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
-          [s(*[:iter, cur_exp, nil] + [inner_exp].compact)]
-        when :special_asgn then
-          param = cur_exp[1]
-          cur_exp[2][3].pop
-          inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
-          [s(*[:iter, cur_exp[2], s(:lasgn, param)] + [inner_exp].compact)]
-        when :masgn then
-          param = cur_exp[1][1..-1].to_a
-          cur_exp[2][1][3].pop
-          inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
-          [s(*[:iter, cur_exp[2][1], s(:masgn, s(:array, *param))] + [inner_exp].compact)]
-        when :attrasgn then
-          next_exp = cur_exp.last.pop.tap{|x| x.last.pop}
-          param = cur_exp
-          inner_exp = acc_exp.size > 1 ? s(:block, *acc_exp) : acc_exp.first
-          [s(*[:iter, next_exp, param] + [inner_exp].compact)]
-        else
-          acc_exp.unshift(process_inner_expr(cur_exp))
+    def group_expr(acc)
+      acc.size > 1 ? s(:block, *acc) : acc.first
+    end
+
+    def remove_block(exp)
+      exp.tap{|e| e[3].pop}
+    end
+
+    def new_exp_containing(acc)
+      lambda do |call_exp, param|
+        [s(*[:iter, remove_block(call_exp), param] + [group_expr(acc)].compact)]
+      end
+    end
+
+    def accumulate(acc, cur)
+      new_exp = new_exp_containing(acc)
+      if special_call?(cur) then
+        new_exp.call(cur, nil)
+      elsif cur.first == :lasgn && special_call?(cur[2])
+        new_exp.call(cur[2], s(:lasgn, cur[1]))
+      elsif cur.first == :masgn && special_call?(cur[2][1])
+        new_exp.call(cur[2][1], s(:masgn, s(:array, *cur[1][1..-1].to_a)))
+      elsif cur.first == :attrasgn && special_call?(cur[3][1])
+        new_exp.call(cur[3][1], s(:attrasgn, *cur[1..-2] + [s(:arglist)]))
+      else
+        acc.unshift(cur)
       end
     end
 
@@ -47,13 +48,6 @@ module StepRewrite
               exp[3].last.class == Sexp &&
               exp[3].last.first == :block_pass &&
               exp[3].last.last[2] == @cb
-    end
-
-    def identify(exp)
-      return :special_call if special_call?(exp)
-      return :special_asgn if exp.first == :lasgn && special_call?(exp[2])
-      return :masgn if exp.first == :masgn && special_call?(exp[2][1])
-      return :attrasgn if exp.first == :attrasgn && special_call?(exp[3][1])
     end
   end
 end
