@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Vishnu S Iyengar"]
   s.email       = %q{pathsny@gmail.com}
   s.homepage    = "http://rubygems.org/gems/step_rewrite"
-  s.summary     = %q{A Gem to Rewrite Ruby code from a special syntax into an evented IO form}
-  s.description = %q{A Gem to Rewrite Ruby code from a special syntax into an evented IO form}
+  s.summary     = %q{code rewriter for evented I/O}
+  s.description = %q{A Gem to Rewrite Ruby code from a special syntax into an evented IO form.}
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "step_rewrite"
