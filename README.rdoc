@@ -3,8 +3,7 @@
 This gem tries to solve a very specific problem when working with evented I/O code.
 Ideally, I suppose it would work with something like EventMachine[http://rubyeventmachine.com/], but I havent
 worked enough with EventMachine to know if that's the case. Its meant for cases
-where blocks are passed to methods, not as is usual, as a lightweight strategy
-pattern, but to sequence a set of steps. Like in this example.
+where blocks are passed to methods solely to sequence a set of steps. Like in this example.
 
     writeFile(path, "hello") do
         File.open(path, "a") do |file|
@@ -18,6 +17,7 @@ pattern, but to sequence a set of steps. Like in this example.
         end
     end
 
+Traditionally blocks have been a lightweight strategy pattern. Not so with evented I/O.
 While each function takes a block, this is merely to sequence the rest of the program
 to execute after the function is executed.
 To understand the context a little better read this[http://blog.vishnuiyengar.com/2010/10/changing-rules.html]
