@@ -136,7 +136,7 @@ style is to define a method instead.
 
 This gem makes use of the ParseTree[https://rubygems.org/gems/ParseTree] gem to
 extract the sexp out of any block and then rewrites it using various rules. This
-code is converted back into Ruby using Ruby2RUby[https://rubygems.org/gems/ruby2ruby]
+code is converted back into Ruby using Ruby2Ruby[https://rubygems.org/gems/ruby2ruby]
 and then evaled into a context
 == Copyright
 
