@@ -41,7 +41,7 @@ StepRewrite module in your code.
     end
 
 The block passed to step is rewritten so that everywhere you have a method
-that takes $_ as a parameter, the rest of the code is passed as a block to it.
+that takes &_ as a parameter, the rest of the code is passed as a block to it.
 So step rewrites this code into the code above and THEN evaluates it.
 
 = Rewrite Rules
