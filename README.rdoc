@@ -85,7 +85,7 @@ existing blocks or lambda parameters are not touched.
 
 = Other execution methods
 
-If step is a method that exists in your code, you can instead use the module method
+If the name step clashes with a method in your code, you can instead use the module method
 
 StepRewrite.step do
   path = "fileio.txt"
@@ -97,7 +97,7 @@ StepRewrite.step do
   puts data.last
 end
 
-if _ is a variable you are already using, you can configure the callback for
+if _ is a variable you are already using, you can configure the special callback identifier for
 rewriting.
 
 StepRewrite.step(:cb) do
