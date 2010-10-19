@@ -112,7 +112,7 @@ end
 
 = Define Method
 
-The problem with the current approach is that it does not cache the result of rewriting
+The problem with the above approach is that it does not cache the result of rewriting
 the code. If what you are writing is part of a long running server, the recommended
 style is to define a method instead.
 
