@@ -87,28 +87,28 @@ existing blocks or lambda parameters are not touched.
 
 If the name step clashes with a method in your code, you can instead use the module method
 
-StepRewrite.step do
-  path = "fileio.txt"
-  writeFile(path, "hello", &_)
-  file = File.open(path, "a", &_)
-  write(file, "\nworld", &_)
-  close(file, &_)
-  data = read(path, &_)
-  puts data.last
-end
+    StepRewrite.step do
+        path = "fileio.txt"
+        writeFile(path, "hello", &_)
+        file = File.open(path, "a", &_)
+        write(file, "\nworld", &_)
+        close(file, &_)
+        data = read(path, &_)
+        puts data.last
+    end
 
 if _ is a variable you are already using, you can configure the special callback identifier for
 rewriting.
 
-StepRewrite.step(:cb) do
-  path = "fileio.txt"
-  writeFile(path, "hello", &cb)
-  file = File.open(path, "a", &cb)
-  write(file, "\nworld", &cb)
-  close(file, &cb)
-  data = read(path, &cb)
-  puts data.last
-end
+    StepRewrite.step(:cb) do
+        path = "fileio.txt"
+        writeFile(path, "hello", &cb)
+        file = File.open(path, "a", &cb)
+        write(file, "\nworld", &cb)
+        close(file, &cb)
+        data = read(path, &cb)
+        puts data.last
+    end
 
 = Define Method
 
@@ -116,21 +116,21 @@ The problem with the above approach is that it does not cache the result of rewr
 the code. If what you are writing is part of a long running server, the recommended
 style is to define a method instead.
 
-require 'step_rewrite/module'
+    require 'step_rewrite/module'
 
-class IO
-  define_step_method :hello_world do
-    path = "fileio.txt"
-    writeFile(path, "hello", &_)
-    file = File.open(path, "a", &_)
-    write(file, "\nworld", &_)
-    close(file, &_)
-    data = read(path, &_)
-    puts data.last
-  end
-end
+    class IO
+        define_step_method :hello_world do
+            path = "fileio.txt"
+            writeFile(path, "hello", &_)
+            file = File.open(path, "a", &_)
+            write(file, "\nworld", &_)
+            close(file, &_)
+            data = read(path, &_)
+            puts data.last
+        end
+    end
 
-IO.new.hello_world
+    IO.new.hello_world
 
 = How does this work?
 
